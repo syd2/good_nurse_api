@@ -1,0 +1,47 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "test": "jest",
+        "start:dev": "npm-run-all dev:*",
+        "build": "yarn install && rm -rf tests && node_modules/.bin/tsc",
+        "start": "node dist/src/app.js",
+        "dev:watch": "nodemon -L"
+    },
+    "keywords": [
+        "Good.nurse"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/body-parser": "^1.19.5",
+        "@types/express": "^4.17.21",
+        "@types/mongoose": "^5.11.97",
+        "@types/node": "^20.14.10",
+        "bcrypt": "^5.1.1",
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.20.2",
+        "connect-mongo": "^5.1.0",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "express-validator": "^7.1.0",
+        "helmet": "^7.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.4.5",
+        "nodemon": "^3.1.4",
+        "passport": "^0.7.0",
+        "passport-jwt": "^4.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.3",
+        "uuid": "^9.0.1",
+        "yarn": "^1.22.22"
+    },
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/jsonwebtoken": "^9.0.6"
+    }
+}

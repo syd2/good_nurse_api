@@ -1,0 +1,31 @@
+version: "3.4"
+
+services:
+    api:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        restart: always
+        environment:
+            #NODE
+            APP_PORT: ${APP_PORT}
+            NODE_ENV: production
+            #MONGO
+            MONGO_URL: ${MONGO_URL}
+            JWT_SECRET: ${JWT_SECRET}
+        ports:
+            - 9000:9000
+        depends_on:
+            - mongo_db
+        links:
+            - mongo_db
+        volumes:
+            - .:/usr/src/app
+    mongo_db:
+        image: mongo:latest
+        ports:
+            - 27017:27017
+        volumes:
+            - data:/data/db
+volumes:
+    data:
