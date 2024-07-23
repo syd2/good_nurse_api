@@ -5,11 +5,11 @@ import helmet from "helmet"
 import cookieParser from "cookie-parser"
 import { MongoClass } from "../services/mongo"
 import { RouterClass } from "../routers/api.router"
+import { SearchRouterClass } from "../routers/search.router"
 import { AuthRouterClass } from "../routers/auth.router"
+import { AppointmentRouterClass } from "../routers/appointment.router"
 import { setAuthentication } from "../services/passport"
 require("dotenv").config()
-
-let isConnected = false
 
 class ServerClass {
     public port: any
@@ -39,22 +39,26 @@ class ServerClass {
     config() {
         const apiRouter = new RouterClass(express)
         const authRouterClass = new AuthRouterClass(express)
+        const searchRouterClass = new SearchRouterClass(express)
+        const appointmentRouterClass = new AppointmentRouterClass(express)
         setAuthentication(passport)
 
         this.server.use("/v1", apiRouter.init())
         this.server.use("/v1/auth", authRouterClass.init())
+        this.server.use("/v1/search", searchRouterClass.init())
+        this.server.use("/v1/appointment", appointmentRouterClass.init())
         // this.server.use("/v1/uploads", express.static("uploads"))
 
-        this.server.use((_req, res, _next) => {
-            return res.status(404).json({
-                success: false,
-                data: null,
-                err: "not_found",
-                message: "Page not found",
-                version: "v1.0",
-                status_code: 404,
-            })
-        })
+        // this.server.use((_req, res, _next) => {
+        //     return res.status(404).json({
+        //         success: false,
+        //         data: null,
+        //         err: "not_found",
+        //         message: "Page not found",
+        //         version: "v1.0",
+        //         status_code: 404,
+        //     })
+        // })
 
         this.server.use(helmet())
     }

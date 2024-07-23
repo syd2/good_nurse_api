@@ -1,7 +1,7 @@
-import { Schema, model, Types } from "mongoose"
+import { Schema, model, Types, Document, Model } from "mongoose"
 import { CrudService, IModel } from "../services/CrudService"
 
-interface IAppointment extends IModel {
+interface IAppointment extends Document {
     patient: Types.ObjectId
     nurse: Types.ObjectId
     date: Date
@@ -12,6 +12,15 @@ interface IAppointment extends IModel {
     notes: string
     created_at: Date
     updated_at: Date
+}
+
+interface IAppointmentModel extends Model<IAppointment> {
+    isTimeSlotAvailable(
+        nurseId: Types.ObjectId,
+        date: Date,
+        start_time: string,
+        end_time: string
+    ): Promise<boolean>
 }
 
 const appointmentSchema = new Schema<IAppointment>({
@@ -27,7 +36,23 @@ const appointmentSchema = new Schema<IAppointment>({
     updated_at: { type: Date },
 })
 
-const Appointment = model<IAppointment>("Appointment", appointmentSchema)
+appointmentSchema.statics.isTimeSlotAvailable = async function (
+    nurseId,
+    date,
+    start_time,
+    end_time
+) {
+    const overlappingAppointments = await this.find({
+        nurse: nurseId,
+        date: date,
+        start_time: { $lt: end_time },
+        end_time: { $gt: start_time },
+        status: "scheduled",
+    })
+    return overlappingAppointments.length === 0
+}
+
+const Appointment = model<IAppointment, IAppointmentModel>("Appointment", appointmentSchema)
 const AppointmentService = new CrudService(Appointment)
 
 export { Appointment, AppointmentService, IAppointment }
